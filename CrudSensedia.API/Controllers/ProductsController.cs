@@ -5,37 +5,30 @@ namespace CrudSensedia.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EcommerceController : ControllerBase
+    public class ProductsController : ControllerBase
     {
-        private static List<Ecommerce> products = new List<Ecommerce>
+        private static List<Product> products = new List<Product>
             {
-                new Ecommerce {
+                new Product {
                     Id = 1,
-                    Product = "T-shirt",
+                    Name = "T-shirt",
                     Price = 5.50
                 }
             };
 
         [HttpGet]
-        public async Task<ActionResult<List<Ecommerce>>> Get(int id)
+        public async Task<ActionResult<Product>> GetProductByIdAsync(int id)
         {
-            var product = products.Find(p => p.Id == id);
+            var product = products.FirstOrDefault(p => p.Id == id);
             if (product == null)
             {
                 return BadRequest("Product not found.");
             }
-            return Ok(products);
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<List<Ecommerce>>> AddProduct(Ecommerce product)
-        {
-            products.Add(product);
-            return Ok(products);
+            return Ok(product);
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<Ecommerce>>> UpdateProduct(Ecommerce request)
+        public async Task<ActionResult<List<Product>>> PutProductCreateOrUpdate(Product request)
         {
             var product = products.Find(p => p.Id == request.Id);
             if (product == null)
@@ -43,20 +36,20 @@ namespace CrudSensedia.Controllers
                 return BadRequest("Product not found.");
             }
 
-            product.Product = request.Product;
+            product.Name = request.Name;
             product.Price = request.Price;
-            return Ok(products);
+            return Ok(product);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Ecommerce>>> Delete(int id)
+        public async Task<ActionResult<Product>> DeleteProduct(int id)
         {
             var product = products.Find(p => p.Id == id);
             if (product == null)
                 return BadRequest("Product not found.");
 
             products.Remove(product);
-            return Ok(products);
+            return Ok(product);
         }
 
     }
